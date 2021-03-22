@@ -3,10 +3,7 @@ import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
 import { ModalController } from '@ionic/angular';
 import { ModalPage } from '../modal/modal.page'
 import { ToastController } from '@ionic/angular';
-
-
-
-
+import { BLE} from '@ionic-native/ble/ngx';
 
 
 @Component({
@@ -14,6 +11,7 @@ import { ToastController } from '@ionic/angular';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
+
 export class HomePage implements OnInit {
 
   btState;
@@ -30,27 +28,30 @@ export class HomePage implements OnInit {
 
   speed = 255
 
-
   constructor(
     private bluetoothSerial: BluetoothSerial,
     public modalController: ModalController,
-    public toastController: ToastController
+    public toastController: ToastController,
+    private ble: BLE
   ) { }
 
 
 
   async ngOnInit() {
+    // this.isBtEnabled();
+    // this.isBtConnected();
+    console.log("BT state: " +  "state")
 
-    this.isBtEnabled();
-    this.isBtConnected();
-
+    // this.ble.startStateNotifications().subscribe(state =>{
+    //   console.log("BT state: " +  state)
+    // })
   }
 
-
-
   async presentModal() {
+
     this.isBtEnabled();
     this.isBtConnected();
+
     this.bluetoothSerial.isEnabled().then(() => {
       this.openModal();
 
@@ -59,12 +60,14 @@ export class HomePage implements OnInit {
     })
   }
 
-  
+
 
   async openModal() {
+
     const modal = await this.modalController.create({
       component: ModalPage,
     });
+
     modal.onDidDismiss()
       .then((data) => {
         console.log(data)
@@ -108,7 +111,6 @@ export class HomePage implements OnInit {
 
   isBtConnected() {
     this.bluetoothSerial.isConnected().then(connected => {
-      console.log("connected: " + connected)
       this.speed = 255
       this.setSpeed(this.speed)
     })
@@ -186,12 +188,14 @@ export class HomePage implements OnInit {
   //   this.bluetoothSerial.write("D" + "\n")
   // }
 
-  setSpeed(speed){
+  setSpeed(speed) {
     this.bluetoothSerial.write("F" + speed + "\n")
 
   }
 
   forward(val) {
+    console.log("BT state: " +  "state")
+
     this.W = val
     this.whereGo()
   }
