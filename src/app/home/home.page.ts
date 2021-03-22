@@ -3,7 +3,10 @@ import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
 import { ModalController } from '@ionic/angular';
 import { ModalPage } from '../modal/modal.page'
 import { ToastController } from '@ionic/angular';
-import { BLE} from '@ionic-native/ble/ngx';
+import { BLE } from '@ionic-native/ble/ngx';
+import { ChangeDetectorRef } from '@angular/core'
+
+
 
 
 @Component({
@@ -19,6 +22,9 @@ export class HomePage implements OnInit {
   btConnectedBool;
 
   btEnabled;
+  btEnabledBool;
+
+  connetcedTo;
 
 
   W = false
@@ -32,32 +38,43 @@ export class HomePage implements OnInit {
     private bluetoothSerial: BluetoothSerial,
     public modalController: ModalController,
     public toastController: ToastController,
-    private ble: BLE
+    private ble: BLE,
+    private changeRef: ChangeDetectorRef
   ) { }
 
+  ngOnInit() {
+   
+    this.ble.startStateNotifications().subscribe(state => {
 
+      if (state == "on") {
+        this.onBtOn()
 
-  async ngOnInit() {
-    // this.isBtEnabled();
-    // this.isBtConnected();
-    console.log("BT state: " +  "state")
+      } else {
+        this.onBtOff()
+      }
+      this.bluetoothSerial.isConnected().then(()=>{
+        this.btConnectedBool = true
+      }).catch(()=>{
+        this.btConnectedBool = false
+      }).finally(()=>{
+        this.isBtConnected()
+      })
 
-    // this.ble.startStateNotifications().subscribe(state =>{
-    //   console.log("BT state: " +  state)
-    // })
+      this.changeRef.detectChanges();
+    })
+
   }
+
 
   async presentModal() {
 
-    this.isBtEnabled();
-    this.isBtConnected();
-
-    this.bluetoothSerial.isEnabled().then(() => {
+    this.ble.isEnabled().then(()=>{
       this.openModal();
 
     }).catch(() => {
       this.presentToast("Il bluetooth è disattivato")
     })
+
   }
 
 
@@ -66,13 +83,18 @@ export class HomePage implements OnInit {
 
     const modal = await this.modalController.create({
       component: ModalPage,
+      componentProps: {
+        'getConnectedTo': this.connetcedTo,
+        
+      }
     });
 
     modal.onDidDismiss()
       .then((data) => {
-        console.log(data)
+
         if (data.data) {
-          this.btConnected = "Connesso a " + "\"" + data.data + "\""
+          this.connetcedTo = data.data.address
+          this.btConnected = "Connesso a " + "\"" + data.data.name + "\""
           this.speed = 255
           this.btConnectedBool = true
           this.setSpeed(this.speed)
@@ -83,6 +105,8 @@ export class HomePage implements OnInit {
           }).catch(() => {
             this.btConnected = "Non connesso"
             this.btConnectedBool = false
+            this.connetcedTo = ""
+
 
           })
         }
@@ -92,13 +116,21 @@ export class HomePage implements OnInit {
     return await modal.present();
   }
 
+
+
   btDisconnect() {
+
     this.bluetoothSerial.disconnect().then(() => {
-      this.btConnected = "Non connesso"
-      this.speed = 255
-      this.btConnectedBool = false
+     this.disconnect();
+
     })
-    this.isBtConnected();
+  }
+  disconnect(){
+    this.btConnected = "Non connesso"
+    this.speed = 255
+    this.btConnectedBool = false
+    this.connetcedTo = ""
+    this.changeRef.detectChanges();
   }
 
   async presentToast(msg) {
@@ -110,21 +142,25 @@ export class HomePage implements OnInit {
   }
 
   isBtConnected() {
-    this.bluetoothSerial.isConnected().then(connected => {
+    this.bluetoothSerial.isConnected().then(() => {
       this.speed = 255
       this.setSpeed(this.speed)
+    }).catch(()=>{
+      this.disconnect();
     })
   }
 
-  isBtEnabled() {
-
-    this.bluetoothSerial.isEnabled().then(() => {
-      this.btState = "Attivo"
-    }).catch(() => {
-      this.btState = "Non attivo"
-    })
-
+  onBtOn() {
+    this.btState = "Attivo"
+    this.btEnabledBool = true;
   }
+
+  onBtOff() {
+    this.btState = "Non attivo"
+    this.btEnabledBool = false;
+    this.btConnectedBool = false;
+  }
+
 
   whereGo() {
 
@@ -194,7 +230,6 @@ export class HomePage implements OnInit {
   }
 
   forward(val) {
-    console.log("BT state: " +  "state")
 
     this.W = val
     this.whereGo()
