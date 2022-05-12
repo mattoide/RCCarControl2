@@ -15,7 +15,7 @@ import { element } from 'protractor';
 export class ModalPage implements OnInit {
   @Input() getConnectedTo: string;
 
-  pairedDevices: []
+  pairedDevices: [];
   connectedTo;
 
   constructor(
@@ -26,7 +26,7 @@ export class ModalPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    await this.discoverBtDevices()
+    await this.discoverBtDevices();
   }
 
   isBtConnected() {
@@ -34,13 +34,13 @@ export class ModalPage implements OnInit {
 
 
     }).catch(() => {
-      this.connectedTo = "";
-    })
+      this.connectedTo = '';
+    });
   }
 
   async presentToast(device) {
     const toast = await this.toastController.create({
-      message: "Indirizzo: " + device.address,
+      message: 'Indirizzo: ' + device.address,
       duration: 2000
     });
     toast.present();
@@ -55,39 +55,39 @@ export class ModalPage implements OnInit {
   }
   async discoverBtDevices() {
 
-    this.connectedTo = this.getConnectedTo
+    this.connectedTo = this.getConnectedTo;
     await this.isBtConnected();
     this.bluetoothSerial.list().then(devices => {
       devices.forEach((element, index, arr) => {
 
         if (element.address == this.connectedTo) {
-          element.connected = true
+          element.connected = true;
         }
 
         if (index == arr.length - 1)
-          this.pairedDevices = devices
+          {this.pairedDevices = devices;}
 
 
       });
 
-    })
+    });
   }
 
   async connectTo(device) {
 
     this.bluetoothSerial.isEnabled().then(() => {
       this.bluetoothSerial.connect(device.address).subscribe(() => {
-        this.modalController.dismiss(device)
-        this.connectedTo = device.address
+        this.modalController.dismiss(device);
+        this.connectedTo = device.address;
       }, (err) => {
-        this.modalController.dismiss(false)
-        this.presentToastMsg("Impossibile connettersi")
+        this.modalController.dismiss(false);
+        this.presentToastMsg('Impossibile connettersi');
       });
     }).catch(() => {
-      this.modalController.dismiss(false)
-      this.presentToastMsg("Attiva il Bluetooth")
+      this.modalController.dismiss(false);
+      this.presentToastMsg('Attiva il Bluetooth');
 
-    })
+    });
 
 
   }

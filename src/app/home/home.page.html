@@ -17,56 +17,51 @@
     </ion-col>
   </ion-row>
 
-  <br>
-
   <ion-row>
     <ion-col>
-      <ion-fab-button color="transparent" size="small" (click)="presentModal()">
+      <ion-fab-button color="dark" size="small" (click)="presentModal()">
         <ion-icon name="bluetooth-outline"></ion-icon>
       </ion-fab-button>
     </ion-col>
 
     <ion-col>
-      <ion-fab-button class="float-right"color="transparent" size="small" (click)="btDisconnect()">
-        <ion-icon name="close-outline"></ion-icon>      
+      <ion-fab-button class="float-right"color="dark" size="small" (click)="btDisconnect()">
+        <ion-icon name="close-outline"></ion-icon>
       </ion-fab-button>
     </ion-col>
   </ion-row>
 
- 
-
-  <div id="container">
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-
+  <ion-row>
     <ion-range [(disabled)]=!btConnectedBool [(value)]=speed min="0" max="255" step="1" color="dark" (ionChange)="setSpeed($event.detail.value)"></ion-range>
-    
-    <br>
-    <br>
-    <ion-row class="float-right">
-      <ion-button color="dark" size="large" (touchstart)="left(true)" (touchend)="left(false)" >
-        <ion-icon name="caret-back-outline"></ion-icon>
-      </ion-button>     
-       <ion-button color="dark" size="large" (touchstart)="right(true)" (touchend)="right(false)" >
-        <ion-icon name="caret-forward-outline"></ion-icon>
-      </ion-button>
+  </ion-row>
+
+  <ion-row class style="align-items: center; text-align: center;" [style.height]="height" [style.align-items]="alignItems" >
+
+      <ion-col>
+      <ion-col>
+        <ion-button  color="dark" size="large" (touchstart)="forward(true)" (touchend)="forward(false)" >
+          <ion-icon name="caret-up-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+        <ion-row>
+      <ion-col>
+        <ion-button  color="dark" size="large" (touchstart)="back(true)" (touchend)="back(false)" >
+          <ion-icon name="caret-down-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+        </ion-row>
+      </ion-col>
+
+      <ion-col >
+        <ion-button style="margin-inline: 5%"  color="dark" size="large" (touchstart)="left(true)" (touchend)="left(false)" >
+          <ion-icon name="caret-back-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button  style="margin-inline: 5%" color="dark" size="large" (touchstart)="right(true)" (touchend)="right(false)" >
+          <ion-icon name="caret-forward-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
     </ion-row>
 
-    <ion-row>
-      <ion-button color="dark" size="large" (touchstart)="forward(true)" (touchend)="forward(false)" >
-        <ion-icon name="caret-up-outline"></ion-icon>
-      </ion-button>
-    </ion-row>
-    <ion-row>
-      <ion-button color="dark" size="large" (touchstart)="back(true)" (touchend)="back(false)" >
-        <ion-icon name="caret-down-outline"></ion-icon>
-      </ion-button>
-    </ion-row>
-    
-    
-  </div>
+
 </ion-content>

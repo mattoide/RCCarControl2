@@ -1,6 +1,9 @@
 {
-  "name": "RCCarControl2",
+  "name": "RCCarControl",
   "integrations": {
+    "capacitor": {
+      "enabled": false
+    },
     "cordova": {}
   },
   "type": "angular"
