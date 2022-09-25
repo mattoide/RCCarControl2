@@ -200,13 +200,15 @@ export class HomePage implements OnInit {
     }
 
     if (this.W && this.A) {
-      this.bluetoothSerial.write('W' + '\n');
-      this.bluetoothSerial.write('A' + '\n');
+      // this.bluetoothSerial.write('W' + '\n');
+      // this.bluetoothSerial.write('A' + '\n');
+      this.bluetoothSerial.write('Q' + '\n');
     }
 
     if (this.W && this.D) {
-      this.bluetoothSerial.write('W' + '\n');
-      this.bluetoothSerial.write('D' + '\n');
+      // this.bluetoothSerial.write('W' + '\n');
+      // this.bluetoothSerial.write('D' + '\n');
+      this.bluetoothSerial.write('E' + '\n');
     }
 
     if (this.S && !this.A && !this.D) {
@@ -214,13 +216,15 @@ export class HomePage implements OnInit {
     }
 
     if (this.S && this.A) {
-      this.bluetoothSerial.write('S' + '\n');
-      this.bluetoothSerial.write('A' + '\n');
+      // this.bluetoothSerial.write('S' + '\n');
+      // this.bluetoothSerial.write('A' + '\n');
+      this.bluetoothSerial.write('Z' + '\n');
     }
 
     if (this.S && this.D) {
-      this.bluetoothSerial.write('S' + '\n');
-      this.bluetoothSerial.write('D' + '\n');
+      // this.bluetoothSerial.write('S' + '\n');
+      // this.bluetoothSerial.write('D' + '\n');
+      this.bluetoothSerial.write('C' + '\n');
     }
 
   }
